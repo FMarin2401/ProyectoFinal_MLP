@@ -1,0 +1,22 @@
+# Proyecto final · MLP en MNIST con NumPy / CuPy / PyTorch
+# Python 3.12 · Windows 11 · GPU NVIDIA (driver con CUDA >= 12)
+# Las versiones marcadas con == ya se probaron en la laptop de Francisco (RTX 4050, CUDA runtime 12.9).
+
+# numpy < 2.5: numba-cuda 0.30.4 usa np.row_stack, que NumPy 2.5 eliminó.
+numpy==2.4.6
+# [ctk] trae las DLL de CUDA (cudart, cuBLAS, NVRTC) dentro del venv: no hace falta el CUDA Toolkit.
+cupy-cuda12x[ctk]==14.2.0
+
+# Carga de MNIST, CSV y gráficas, evidencia de hilos
+scikit-learn
+pandas
+matplotlib
+threadpoolctl
+
+# PyTorch con CUDA NO se instala desde PyPI a secas: usar el comando de https://pytorch.org/get-started/locally/
+# (Windows · Pip · Python · CUDA 12.x) y luego fijar aquí la versión que quede instalada, p. ej. torch==X.Y.Z
+# torch
+
+# Solo para el bonus (kernel @cuda.jit):
+# numba==0.68.1
+# numba-cuda[cu12]==0.30.4

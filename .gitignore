@@ -1,0 +1,19 @@
+# Entornos y caches de Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Datos descargados (MNIST cacheado por la plantilla): se regeneran solos
+.cache/
+
+# Salidas de pruebas rápidas (las finales en results/ SÍ se suben)
+results_quick/
+
+# Sistema / editores
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.obsidian/
