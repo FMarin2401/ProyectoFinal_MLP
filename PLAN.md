@@ -55,7 +55,7 @@ Entrenar la misma red neuronal (784 → 512 → 256 → 10) sobre MNIST de tres 
 
 ### Francisco · CuPy + experimentos (rama `cupy`)
 
-> **Estado (jue 26):** CuPy terminado y fusionado (PR #1): error relativo < 1e-8 contra diferencias finitas y **96.05 %** en MNIST real (3 épocas, batch 128). PyTorch hecho en la rama `pytorch`: `--consistency` aprobado con los 3 backends (máx. 1.5e-08 contra NumPy) y la misma accuracy, 96.05 %. Siguiente: `--mode quick`.
+> **Estado (jue 26):** CuPy terminado y fusionado (PR #1): error relativo < 1e-8 contra diferencias finitas y **96.05 %** en MNIST real (3 épocas, batch 128). PyTorch fusionado (PR #4): `--consistency` aprobado con los 3 backends (máx. 1.5e-08 contra NumPy). `--mode quick` sin errores y **barrido `full` terminado** (Protocolos T y C, este último en GPU con los 4 batches): `results/` + resumen en [`docs/resultados.md`](docs/resultados.md). Pendiente: bonus Numba (opcional).
 
 1. Partir del backward de NumPy ya validado: es la misma fórmula con `cp`.
 2. `backward_cupy` y `sgd_update_cupy`, **sin** `.get()`, `.item()` ni `cp.asnumpy()` adentro; el one-hot con `cp.arange`.
@@ -69,11 +69,13 @@ Entrenar la misma red neuronal (784 → 512 → 256 → 10) sobre MNIST de tres 
 
 ### Rodrigo · Reporte, demo y presentación (rama `pytorch-docs`)
 
-1. Esqueleto de `docs/reporte.md`: introducción · método (usar [`docs/derivacion_backward.md`](docs/derivacion_backward.md)) · implementación (usar [`docs/numpy.md`](docs/numpy.md) y la sección de CuPy/PyTorch) · resultados (vacío) · conclusiones · **declaración de uso de IA** (herramienta y para qué; el enunciado solo la permite para entender conceptos o depurar, así que hay que ser honestos con lo que generó código).
+> **Ya tienes todo para empezar:** `git pull origin main` y abre [`docs/reporte.md`](docs/reporte.md). Es el esqueleto del reporte con las secciones que pide la rúbrica, las 5 figuras ya insertadas y notas ✍️ de qué escribir en cada parte. Los números y el análisis con cálculos están en [`docs/resultados.md`](docs/resultados.md); los FLOPs y el gradcheck, en [`docs/numpy.md`](docs/numpy.md).
+
+1. Redactar [`docs/reporte.md`](docs/reporte.md) siguiendo las notas ✍️, incluida la **declaración de uso de IA** (ya trae un borrador; cada quien completa su parte).
 2. Entender la versión PyTorch para la defensa (te la puede preguntar el profe): por qué `zero_grad` va antes del backward, por qué se copian los pesos como `W.T` (`nn.Linear` guarda `(salida, entrada)`), por qué TF32 desactivado y SGD sin momentum.
-3. README: revisar que se pueda instalar y correr desde un clon limpio (ya trae el script y los problemas conocidos); completar CPU y la declaración de IA.
+3. README: revisar que se pueda instalar y correr desde un clon limpio (ya trae el script, los problemas conocidos y el hardware); completar la declaración de IA.
 4. Planear la demo (en vivo o video corto): p. ej. `--consistency` y un entrenamiento corto con `--backend cupy`.
-5. Con las gráficas (sábado): llenar resultados, convertir el reporte a PDF (6–10 págs., ≥ 4 figuras con unidades) y armar la presentación (10 min ± 1).
+5. Exportar el reporte a PDF (6–10 págs.; instrucciones al final de `reporte.md`) y armar la presentación (10 min ± 1) con las figuras de `results/`.
 
 ### Cierre · Los tres juntos
 
@@ -81,7 +83,7 @@ Entrenar la misma red neuronal (784 → 512 → 256 → 10) sobre MNIST de tres 
 2. Uno corre todo desde `main` en limpio para confirmar que es reproducible.
 3. Leer el reporte completo y ensayar la defensa: cada quien explica su parte **y** sabe derivar el backward.
 
-> **Ruta crítica:** ~~gradcheck de Luis Pablo~~ ✅ → ~~CuPy~~ ✅ → PyTorch (Francisco) → `--mode quick` → experimentos `full` → resultados en el reporte (Rodrigo).
+> **Ruta crítica:** ~~gradcheck~~ ✅ → ~~CuPy~~ ✅ → ~~PyTorch~~ ✅ → ~~`--mode quick`~~ ✅ → ~~experimentos `full`~~ ✅ → **reporte y presentación (Rodrigo)** → prueba desde un clon limpio y ensayo (los tres).
 
 ## Calendario
 

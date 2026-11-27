@@ -1,0 +1,67 @@
+{
+  "backend": "numpy",
+  "batch_size": 128,
+  "epochs": 3,
+  "lr": 0.1,
+  "n_train": 60000,
+  "iters_per_epoch": 469,
+  "synthetic": false,
+  "transfer_s": 0.0,
+  "h2d_s": 0.0,
+  "d2h_s": 0.0,
+  "compute_s": 6.442267600010382,
+  "total_s": 6.442267600010382,
+  "eval_s": 0.12888000000384636,
+  "test_acc": 0.9599,
+  "loss_por_época": [
+    0.36921585286458336,
+    0.175343798828125,
+    0.128471142578125
+  ],
+  "test_loss_por_época": [
+    null,
+    null,
+    0.13085030019283295
+  ],
+  "test_acc_por_época": [
+    null,
+    null,
+    0.9599
+  ],
+  "epoch_times_s": [
+    2.1559685000102036,
+    2.1396560999855865,
+    2.146643000014592
+  ],
+  "cum_compute_s": [
+    2.1559685000102036,
+    4.29562459999579,
+    6.442267600010382
+  ],
+  "env": {
+    "python": "3.12.9",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "numpy": "2.4.6",
+    "threads": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "threadpools": [
+        {
+          "api": "openblas",
+          "num_threads": 1
+        },
+        {
+          "api": "openmp",
+          "num_threads": 1
+        },
+        {
+          "api": "openblas",
+          "num_threads": 1
+        }
+      ]
+    },
+    "cpu_logical_cores": 16
+  }
+}
