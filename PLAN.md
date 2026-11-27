@@ -12,9 +12,11 @@ Entrenar la misma red neuronal (784 → 512 → 256 → 10) sobre MNIST de tres 
 
 | Quién | Rama | Tareas | Cómo se prueba |
 |---|---|---|---|
-| **Francisco** | `cupy` | `backward_cupy`, `sgd_update_cupy` · correr **todos** los experimentos en su laptop (RTX 4050) · bonus Numba si hay tiempo | `--consistency` |
+| **Francisco** | `cupy`, `pytorch` | `backward_cupy`, `sgd_update_cupy` · `torch_backward_and_update` (2 líneas) · correr **todos** los experimentos en su laptop (RTX 4050) · bonus Numba si hay tiempo | `--consistency` |
 | **Luis Pablo** | `numpy` | `backward_numpy`, `sgd_update_numpy` · `--gradcheck` · derivar a mano los FLOPs por iteración para el reporte | `--gradcheck` (no necesita GPU) |
-| **Rodrigo** | `pytorch-docs` | `torch_backward_and_update` (2 líneas) · README · reporte (6–10 págs.) y presentación (10 min) | `--consistency` |
+| **Rodrigo** | `pytorch-docs` | Reporte (6–10 págs.) · presentación (10 min) · demo o video · README final | Revisión del equipo |
+
+> **Cambio de roles (jue 26):** Francisco hace `torch_backward_and_update` (ya tiene el entorno con GPU y son 2 líneas) para que el pipeline completo corra desde el viernes. Rodrigo se enfoca de lleno en el reporte, la demo y la presentación, que son lo más pesado. Rodrigo: aun así tienes que poder explicar la versión PyTorch en la defensa (sección "Rodrigo" abajo).
 
 > ‼️ En la defensa le pueden preguntar **a cualquiera** cosas como "deriva dZ3" o "explica la sincronización". Aunque cada quien haga su parte, los tres tenemos que entender el backward.
 
@@ -42,6 +44,8 @@ Entrenar la misma red neuronal (784 → 512 → 256 → 10) sobre MNIST de tres 
 
 ### Luis Pablo · NumPy (rama `numpy`)
 
+> **Estado (jue 26): terminado y fusionado (PR #2).** `--gradcheck` aprobado (error máx. 4.2e-08), FLOPs derivados en [`docs/numpy.md`](docs/numpy.md).
+
 1. `backward_numpy(p, cache, y)` → `[dW1, db1, dW2, db2, dW3, db3]` en float32.
 2. `sgd_update_numpy(p, grads, lr)` **in-place** (`-=`).
 3. `python proyecto_mlp_mnist.py --gradcheck` hasta que pase en los 6 parámetros. **Esto desbloquea a Francisco.**
@@ -51,25 +55,25 @@ Entrenar la misma red neuronal (784 → 512 → 256 → 10) sobre MNIST de tres 
 
 ### Francisco · CuPy + experimentos (rama `cupy`)
 
-> **Estado (jue 26):** pasos 1–4 hechos. `backward_cupy` validado contra diferencias finitas en float64 (error relativo < 1e-8 en los 6 parámetros) y con MNIST real: **96.05 %** de accuracy en 3 épocas (batch 128). Falta `--consistency`, que necesita las ramas `numpy` y `pytorch-docs`.
+> **Estado (jue 26):** CuPy terminado y fusionado (PR #1): error relativo < 1e-8 contra diferencias finitas y **96.05 %** en MNIST real (3 épocas, batch 128). PyTorch hecho en la rama `pytorch`: `--consistency` aprobado con los 3 backends (máx. 1.5e-08 contra NumPy) y la misma accuracy, 96.05 %. Siguiente: `--mode quick`.
 
 1. Partir del backward de NumPy ya validado: es la misma fórmula con `cp`.
 2. `backward_cupy` y `sgd_update_cupy`, **sin** `.get()`, `.item()` ni `cp.asnumpy()` adentro; el one-hot con `cp.arange`.
 3. `python proyecto_mlp_mnist.py --consistency` (< 1e-4 contra los otros backends).
 4. Entrenamiento corto con `--backend cupy` y confirmar que la pérdida baja igual que en NumPy.
 5. `git push` y PR `cupy → main`.
-6. Con los 3 PRs en `main`: `python run_experiments.py --mode quick` y, si todo sale bien, `--mode full` (usar `--resume` si se corta).
-7. Subir `results/` (CSV y `fig_*.png`).
-8. *(Bonus)* kernel Numba si sobra tiempo.
+6. `torch_backward_and_update` en la rama `pytorch` (`loss.backward()` + `optimizer.step()`; `zero_grad` ya lo llama la plantilla), `--consistency` con los 3 backends y PR `pytorch → main`.
+7. Con los 3 PRs en `main`: `python run_experiments.py --mode quick` y, si todo sale bien, `--mode full` (usar `--resume` si se corta).
+8. Subir `results/` (CSV y `fig_*.png`).
+9. *(Bonus)* kernel Numba si sobra tiempo.
 
-### Rodrigo · PyTorch + documentos (rama `pytorch-docs`)
+### Rodrigo · Reporte, demo y presentación (rama `pytorch-docs`)
 
-1. `torch_backward_and_update(loss, optimizer)`: calcular gradientes y dar el paso. Revisar en la plantilla (≈ línea 410) dónde ya se llama `zero_grad`.
-2. Entrenamiento corto con `--backend torch` y confirmar que la pérdida baja.
-3. `git push` y PR `pytorch-docs → main`.
-4. Mientras tanto, esqueleto de `docs/reporte.md`: introducción · método (usar `docs/derivacion_backward.md`) · implementación · resultados (vacío) · conclusiones · **declaración de uso de IA**.
-5. README: cómo instalar y correr desde un clon limpio.
-6. Con las gráficas: llenar resultados, convertir el reporte a PDF y armar la presentación.
+1. Esqueleto de `docs/reporte.md`: introducción · método (usar [`docs/derivacion_backward.md`](docs/derivacion_backward.md)) · implementación (usar [`docs/numpy.md`](docs/numpy.md) y la sección de CuPy/PyTorch) · resultados (vacío) · conclusiones · **declaración de uso de IA** (herramienta y para qué; el enunciado solo la permite para entender conceptos o depurar, así que hay que ser honestos con lo que generó código).
+2. Entender la versión PyTorch para la defensa (te la puede preguntar el profe): por qué `zero_grad` va antes del backward, por qué se copian los pesos como `W.T` (`nn.Linear` guarda `(salida, entrada)`), por qué TF32 desactivado y SGD sin momentum.
+3. README: revisar que se pueda instalar y correr desde un clon limpio (ya trae el script y los problemas conocidos); completar CPU y la declaración de IA.
+4. Planear la demo (en vivo o video corto): p. ej. `--consistency` y un entrenamiento corto con `--backend cupy`.
+5. Con las gráficas (sábado): llenar resultados, convertir el reporte a PDF (6–10 págs., ≥ 4 figuras con unidades) y armar la presentación (10 min ± 1).
 
 ### Cierre · Los tres juntos
 
@@ -77,7 +81,7 @@ Entrenar la misma red neuronal (784 → 512 → 256 → 10) sobre MNIST de tres 
 2. Uno corre todo desde `main` en limpio para confirmar que es reproducible.
 3. Leer el reporte completo y ensayar la defensa: cada quien explica su parte **y** sabe derivar el backward.
 
-> **Ruta crítica:** gradcheck de Luis Pablo → CuPy de Francisco → experimentos `full`. Lo de Rodrigo corre en paralelo y no bloquea a nadie.
+> **Ruta crítica:** ~~gradcheck de Luis Pablo~~ ✅ → ~~CuPy~~ ✅ → PyTorch (Francisco) → `--mode quick` → experimentos `full` → resultados en el reporte (Rodrigo).
 
 ## Calendario
 

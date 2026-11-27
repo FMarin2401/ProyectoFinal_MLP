@@ -249,8 +249,9 @@ def sgd_update_cupy(p, grads, lr):
 # --------------------------------------------------------------------------
 def torch_backward_and_update(loss, optimizer):
     """Calcula gradientes y actualiza con torch.optim.SGD (sin momentum)."""
-    # TODO (estudiante): backward + paso del optimizador (dos líneas)
-    raise NotImplementedError("Completa torch_backward_and_update")
+    # zero_grad ya se llama en TorchBackend._step antes de esta función: aquí no se repite.
+    loss.backward()     # autograd: llena .grad de cada parámetro (equivale a nuestro backward_numpy/cupy)
+    optimizer.step()    # SGD sin momentum: p -= lr * p.grad (equivale a sgd_update_*)
 
 
 # --------------------------------------------------------------------------
