@@ -20,20 +20,32 @@ El enunciado y la rúbrica están en [`docs/Proyecto_final.pdf`](docs/Proyecto_f
 proyecto_mlp_mnist.py   # plantilla del profesor + nuestros TODO (backward, SGD, PyTorch)
 run_experiments.py      # barrido backends × batch, CSV y gráficas
 requirements.txt        # dependencias (con versiones probadas)
+setup_entorno.ps1       # crea .venv, instala todo (incluido torch con CUDA) y verifica la GPU
 results/                # CSV, logs y figuras del barrido completo (se suben al repo)
 docs/                   # enunciado y material del reporte
 ```
 
 ## Instalación (Windows · PowerShell)
 
+Requisitos: Python 3.12 y, para CuPy/PyTorch, una GPU NVIDIA con driver reciente (`nvidia-smi` debe funcionar). **No** hace falta instalar el CUDA Toolkit.
+
 ```powershell
-python -m venv .venv
-.venv\Scripts\activate          # si PowerShell lo bloquea: Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-# PyTorch con CUDA: copiar el comando de https://pytorch.org/get-started/locally/ (Windows, Pip, CUDA 12.x)
-nvidia-smi                      # anotar modelo de GPU, driver y versión de CUDA para el reporte
+powershell -ExecutionPolicy Bypass -File .\setup_entorno.ps1
+.\.venv\Scripts\Activate.ps1    # si PowerShell lo bloquea: Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
+
+El script crea `.venv`, instala `requirements.txt`, instala PyTorch con CUDA 12.6 desde pytorch.org (~2.6 GB), verifica la GPU y hace una prueba corta de la plantilla. Se puede correr las veces que haga falta: reutiliza lo que ya está instalado.
+
+Problemas conocidos (ya resueltos en el repo):
+
+| Síntoma | Causa | Qué hacer |
+|---|---|---|
+| La descarga de torch se corta (`incomplete-download`, `getaddrinfo failed`) | Red inestable; el archivo pesa ~2.6 GB | Volver a correr `setup_entorno.ps1`: reanuda la descarga |
+| `TypeError: expected string or bytes-like object, got 'int'` al bajar MNIST | `fetch_openml` no es compatible con pandas 3 | `requirements.txt` ya fija `pandas<3`; correr de nuevo el script (o `pip install -r requirements.txt`) |
+| `UserWarning: CUDA path could not be detected` | CuPy no encuentra un CUDA Toolkit instalado | Ignorarlo: `cupy-cuda12x[ctk]` trae sus propias DLL de CUDA |
+| La prueba final del script truena con `NotImplementedError` | Algún TODO aún no está en tu rama | Normal hasta que se fusionen las 3 ramas |
+
+Después de cada `git pull` que cambie `requirements.txt` o `setup_entorno.ps1`, vuelve a correr el script.
 
 En Google Colab o Kaggle (plan B sin GPU NVIDIA): `pip install -r requirements.txt` (cupy y torch ya suelen venir instalados).
 
@@ -61,7 +73,8 @@ Los hilos de CPU se fijan a 1 dentro de la plantilla, antes de importar NumPy (`
 
 - Semilla 42 en el split, en los pesos He, en el orden de los lotes, en NumPy y en PyTorch (ya fijada en la plantilla).
 - Todas las mediciones finales se corren en **la misma máquina y la misma sesión**.
-- Hardware de referencia: *(completar: GPU, CPU, driver, CUDA, versiones de librerías)*.
+- Hardware de referencia: NVIDIA GeForce RTX 4050 Laptop GPU (6 GB, TGP 105 W, driver 610.62) · CPU *(completar)* · Windows 11.
+- Software probado: Python 3.12.9 · NumPy 2.4.6 · CuPy 14.2.0 (`cupy-cuda12x[ctk]`) · PyTorch 2.14.1+cu126 · pandas 2.3.3 · scikit-learn 1.9.1. La lista exacta de la corrida final queda en `results/env.json`.
 
 ## Créditos y uso de IA
 

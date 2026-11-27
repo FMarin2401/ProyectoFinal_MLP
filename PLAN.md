@@ -30,15 +30,15 @@ Entrenar la misma red neuronal (784 → 512 → 256 → 10) sobre MNIST de tres 
    git checkout -b cupy         # Francisco
    git checkout -b pytorch-docs # Rodrigo
    ```
-2. Crear el entorno e instalar dependencias:
+2. Crear el entorno con el script (instala `requirements.txt` y PyTorch con CUDA, verifica la GPU y prueba la plantilla):
    ```powershell
-   python -m venv .venv
+   powershell -ExecutionPolicy Bypass -File .\setup_entorno.ps1
    .\.venv\Scripts\Activate.ps1
-   pip install -r requirements.txt
    ```
-3. Instalar PyTorch con CUDA con el comando que da [pytorch.org](https://pytorch.org/get-started/locally/) (Windows · Pip · CUDA 12.x).
-4. Comprobar que la plantilla arranca: `python proyecto_mlp_mnist.py --backend numpy --synthetic --train-limit 6000 --epochs 1`. Puede fallar **en los TODO**; lo importante es que no truene antes (imports, GPU).
-5. Leer [`docs/derivacion_backward.md`](docs/derivacion_backward.md) e intentar escribir el backward completo sin ver (sección 6).
+   - Si la descarga de torch (~2.6 GB) se corta, **vuelve a correr el script**: reanuda.
+   - La prueba del final puede tronar con `NotImplementedError` en un TODO que aún no esté en tu rama: es normal. Lo importante es que no truene antes (imports, GPU).
+   - Otros errores conocidos y su solución: tabla "Problemas conocidos" del [README](README.md#instalación-windows--powershell).
+3. Leer [`docs/derivacion_backward.md`](docs/derivacion_backward.md) e intentar escribir el backward completo sin ver (sección 6).
 
 ### Luis Pablo · NumPy (rama `numpy`)
 
@@ -50,6 +50,8 @@ Entrenar la misma red neuronal (784 → 512 → 256 → 10) sobre MNIST de tres 
 6. `git push` y PR `numpy → main`.
 
 ### Francisco · CuPy + experimentos (rama `cupy`)
+
+> **Estado (jue 26):** pasos 1–4 hechos. `backward_cupy` validado contra diferencias finitas en float64 (error relativo < 1e-8 en los 6 parámetros) y con MNIST real: **96.05 %** de accuracy en 3 épocas (batch 128). Falta `--consistency`, que necesita las ramas `numpy` y `pytorch-docs`.
 
 1. Partir del backward de NumPy ya validado: es la misma fórmula con `cp`.
 2. `backward_cupy` y `sgd_update_cupy`, **sin** `.get()`, `.item()` ni `cp.asnumpy()` adentro; el one-hot con `cp.arange`.
@@ -92,8 +94,13 @@ Entrenar la misma red neuronal (784 → 512 → 256 → 10) sobre MNIST de tres 
 1. Cada quien trabaja en **su rama** (`git checkout -b numpy`, etc.).
 2. Cada TODO es una función distinta, así que casi no habrá conflictos. Aun así, **no modifiquen nada fuera de su TODO** sin avisar; el enunciado pide justificar cualquier cambio a la plantilla.
 3. Al terminar: `git push` y abrir un *pull request* a `main`. Otro integrante lo revisa y lo fusiona.
-4. **No subir** `.venv/`, `.cache/` ni `results_quick/` (ya están en `.gitignore`).
-5. Los resultados finales (`results/`) **solo** se generan en la laptop de Francisco, para que la comparación sea válida.
+4. Cuando se fusione un PR, los demás traen esos cambios a **su** rama (no hace falta cambiarse a `main`):
+   ```powershell
+   git pull origin main
+   powershell -ExecutionPolicy Bypass -File .\setup_entorno.ps1   # por si cambiaron requirements.txt o el script
+   ```
+5. **No subir** `.venv/`, `.cache/` ni `results_quick/` (ya están en `.gitignore`).
+6. Los resultados finales (`results/`) **solo** se generan en la laptop de Francisco, para que la comparación sea válida.
 
 ## La parte matemática (resumen)
 
