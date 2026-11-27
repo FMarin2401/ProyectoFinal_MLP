@@ -14,6 +14,18 @@ Se entrena la misma red (784 → 512 ReLU → 256 ReLU → 10 Softmax) sobre MNI
 
 El enunciado y la rúbrica están en [`docs/Proyecto_final.pdf`](docs/Proyecto_final.pdf). El plan de trabajo del equipo está en [`PLAN.md`](PLAN.md).
 
+**Entregables:** reporte en [`docs/reporte.pdf`](docs/reporte.pdf) (fuente: [`docs/reporte.md`](docs/reporte.md)) y presentación en [`docs/presentacion.pdf`](docs/presentacion.pdf).
+
+## Resultados principales
+
+| | NumPy (1 hilo) | CuPy | PyTorch |
+|---|---|---|---|
+| Speedup en cómputo con batch 2048 | 1× | 29.2× | 41.4× |
+| Speedup en cómputo con batch 32 | 1× | 1.5× | 2.0× |
+| Accuracy en test (batch 128, 20 épocas) | 98.09 % | 98.11 % | 98.07 % |
+
+Gradient check: error relativo máximo 4.2e-08. Prueba de consistencia entre backends: 1.5e-08. Tablas completas y análisis en [`docs/resultados.md`](docs/resultados.md).
+
 ## Estructura
 
 ```
@@ -22,7 +34,7 @@ run_experiments.py      # barrido backends × batch, CSV y gráficas
 requirements.txt        # dependencias (con versiones probadas)
 setup_entorno.ps1       # crea .venv, instala todo (incluido torch con CUDA) y verifica la GPU
 results/                # CSV, logs y figuras del barrido completo (se suben al repo)
-docs/                   # enunciado, derivación del backward, numpy.md, resultados.md (resumen y análisis) y reporte.md (esqueleto)
+docs/                   # enunciado, derivación del backward, numpy.md, resultados.md, reporte (md y PDF) y presentación (PDF)
 ```
 
 ## Instalación (Windows · PowerShell)
@@ -79,4 +91,9 @@ Los hilos de CPU se fijan a 1 dentro de la plantilla, antes de importar NumPy (`
 ## Créditos y uso de IA
 
 - Plantilla `proyecto_mlp_mnist.py` y `run_experiments.py`: material del profesor del curso.
-- Uso de IA: *(declarar aquí y en el reporte: herramienta y para qué se usó)*.
+- Uso de IA: se usó **Claude** (Anthropic) como asistente. La declaración completa por integrante está al final del [reporte](docs/reporte.md#declaración-de-uso-de-ia):
+  - **Francisco:** Claude Code para generar `backward_cupy`, `sgd_update_cupy` y `torch_backward_and_update` a partir de la derivación del equipo, escribir `setup_entorno.ps1`, diagnosticar problemas del entorno, ejecutar los experimentos y redactar `docs/resultados.md`.
+  - **Luis Pablo:** Claude Code para generar `backward_numpy` y `sgd_update_numpy`; él validó el gradient check, derivó los FLOPs y documentó `docs/numpy.md`.
+  - **Rodrigo:** Claude para redactar el reporte a partir de los resultados y armar la presentación.
+
+  Todo el código generado se verificó con `--gradcheck`, `--consistency` y entrenamientos de prueba.
