@@ -9,7 +9,9 @@ cupy-cuda12x[ctk]==14.2.0
 
 # Carga de MNIST, CSV y gráficas, evidencia de hilos
 scikit-learn
-pandas
+# pandas < 3: con pandas 3.x, fetch_openml("mnist_784") truena al leer el ARFF
+# (TypeError en strip_single_quotes, probado con scikit-learn 1.9.1).
+pandas<3
 matplotlib
 threadpoolctl
 
