@@ -1,0 +1,4 @@
+backend,batch_size,rep,target_acc,epoch_reached,compute_s_to_target,final_test_acc
+cupy,128,1,0.95,2,1.3272053000109736,0.9811
+numpy,128,1,0.95,2,3.8205723999999464,0.9809
+torch,128,1,0.95,2,1.0571327999932691,0.9806999564170837

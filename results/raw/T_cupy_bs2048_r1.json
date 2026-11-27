@@ -1,0 +1,72 @@
+{
+  "backend": "cupy",
+  "batch_size": 2048,
+  "epochs": 3,
+  "lr": 0.1,
+  "n_train": 60000,
+  "iters_per_epoch": 30,
+  "synthetic": false,
+  "transfer_s": 0.07988979999208823,
+  "h2d_s": 0.07900259998859838,
+  "d2h_s": 0.000887200003489852,
+  "compute_s": 0.14883580000605434,
+  "total_s": 0.22872559999814257,
+  "eval_s": 0.047470100020291284,
+  "test_acc": 0.8922,
+  "loss_por_época": [
+    1.2172029947916667,
+    0.5123616861979167,
+    0.39816884765625
+  ],
+  "test_loss_por_época": [
+    null,
+    null,
+    0.3761409521102905
+  ],
+  "test_acc_por_época": [
+    null,
+    null,
+    0.8922
+  ],
+  "epoch_times_s": [
+    0.05364200001349673,
+    0.050825899990741163,
+    0.04436790000181645
+  ],
+  "cum_compute_s": [
+    0.05364200001349673,
+    0.10446790000423789,
+    0.14883580000605434
+  ],
+  "env": {
+    "python": "3.12.9",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "numpy": "2.4.6",
+    "threads": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "threadpools": [
+        {
+          "api": "openblas",
+          "num_threads": 1
+        },
+        {
+          "api": "openmp",
+          "num_threads": 1
+        },
+        {
+          "api": "openblas",
+          "num_threads": 1
+        }
+      ]
+    },
+    "cpu_logical_cores": 16,
+    "cupy": "14.2.0",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+    "cuda_runtime": 12090,
+    "cuda_driver": 13030,
+    "gpu_mem_gb": 6.0
+  }
+}

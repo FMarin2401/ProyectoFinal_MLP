@@ -73,7 +73,7 @@ Los hilos de CPU se fijan a 1 dentro de la plantilla, antes de importar NumPy (`
 
 - Semilla 42 en el split, en los pesos He, en el orden de los lotes, en NumPy y en PyTorch (ya fijada en la plantilla).
 - Todas las mediciones finales se corren en **la misma máquina y la misma sesión**.
-- Hardware de referencia: NVIDIA GeForce RTX 4050 Laptop GPU (6 GB, TGP 105 W, driver 610.62) · CPU *(completar)* · Windows 11.
+- Hardware de referencia: NVIDIA GeForce RTX 4050 Laptop GPU (6 GB, TGP 105 W, driver 610.62) · Intel Core i5-13450HX (10 núcleos / 16 hilos; NumPy fijado a 1 hilo) · 12 GB RAM · laptop Lenovo 83DV · Windows 11 (build 26200).
 - Software probado: Python 3.12.9 · NumPy 2.4.6 · CuPy 14.2.0 (`cupy-cuda12x[ctk]`) · PyTorch 2.14.1+cu126 · pandas 2.3.3 · scikit-learn 1.9.1. La lista exacta de la corrida final queda en `results/env.json`.
 
 ## Créditos y uso de IA
