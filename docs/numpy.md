@@ -100,14 +100,17 @@ Con **pandas 3.1.1** y **scikit-learn 1.9.1**, `fetch_openml("mnist_784")` falla
 TypeError: expected string or bytes-like object, got 'int'
 ```
 
-Con `pandas<3` (probado con 2.3.3) carga sin problema. `requirements.txt` no fija la versión de pandas, así que una instalación desde un clon limpio puede fallar. Propuesta: fijar `pandas<3` en `requirements.txt`. Con `--synthetic` no se necesita OpenML y no ocurre el error.
+Con `pandas<3` (probado con 2.3.3) carga sin problema. **Resuelto:** `requirements.txt` ya fija `pandas<3`, así que una instalación desde un clon limpio no tiene este problema. Con `--synthetic` no se necesita OpenML y el error no ocurre.
 
 ## Cómo reproducir
 
+Entorno con el script del repo (el mismo para las tres versiones; ver la [instalación del README](../README.md#instalación-windows--powershell)):
+
 ```powershell
-python -m venv .venv
+powershell -ExecutionPolicy Bypass -File .\setup_entorno.ps1
 .\.venv\Scripts\Activate.ps1
-pip install numpy==2.4.6 scikit-learn "pandas<3" matplotlib threadpoolctl
 python proyecto_mlp_mnist.py --gradcheck
 python proyecto_mlp_mnist.py --backend numpy --train-limit 6000 --epochs 3
 ```
+
+La versión NumPy no necesita GPU: en una máquina sin NVIDIA el script solo avisa en la verificación de GPU y estos dos comandos funcionan igual.
