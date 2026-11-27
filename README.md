@@ -22,7 +22,7 @@ run_experiments.py      # barrido backends × batch, CSV y gráficas
 requirements.txt        # dependencias (con versiones probadas)
 setup_entorno.ps1       # crea .venv, instala todo (incluido torch con CUDA) y verifica la GPU
 results/                # CSV, logs y figuras del barrido completo (se suben al repo)
-docs/                   # enunciado y material del reporte
+docs/                   # enunciado, derivación del backward, numpy.md, resultados.md (resumen y análisis) y reporte.md (esqueleto)
 ```
 
 ## Instalación (Windows · PowerShell)
