@@ -213,14 +213,35 @@ def sgd_update_numpy(p, grads, lr):
 # --------------------------------------------------------------------------
 def backward_cupy(p, cache, y):
     """Igual que backward_numpy pero con arreglos CuPy en VRAM (sin copias a CPU)."""
-    # TODO (estudiante): implementar backward en CuPy
-    raise NotImplementedError("Completa backward_cupy")
+    import cupy as cp                       # ya importado por el backend: solo toma el módulo en caché
+    W1, b1, W2, b2, W3, b3 = p
+    X, Z1, A1, Z2, A2, P = cache
+    B = X.shape[0]
+
+    # Capa de salida: softmax + entropía cruzada -> dZ3 = (P - onehot(y)) / B
+    dZ3 = P.copy()                          # no tocar P del cache
+    dZ3[cp.arange(B), y] -= 1               # restar el one-hot sin construir la matriz (B, 10)
+    dZ3 /= B                                # el único /B: la pérdida ya viene promediada
+    dW3 = A2.T @ dZ3
+    db3 = dZ3.sum(axis=0)
+
+    # Capa oculta 2: ReLU
+    dZ2 = (dZ3 @ W3.T) * (Z2 > 0)
+    dW2 = A1.T @ dZ2
+    db2 = dZ2.sum(axis=0)
+
+    # Capa oculta 1: ReLU (no hace falta dX)
+    dZ1 = (dZ2 @ W2.T) * (Z1 > 0)
+    dW1 = X.T @ dZ1
+    db1 = dZ1.sum(axis=0)
+
+    return [dW1, db1, dW2, db2, dW3, db3]   # todo float32 y en VRAM
 
 
 def sgd_update_cupy(p, grads, lr):
     """Actualiza la lista p IN-PLACE en la GPU (p[i] -= lr * grads[i])."""
-    # TODO (estudiante): implementar el paso SGD en CuPy
-    raise NotImplementedError("Completa sgd_update_cupy")
+    for W, dW in zip(p, grads):
+        W -= lr * dW                        # in-place: mismo buffer en VRAM, sin copias a CPU
 
 
 # --------------------------------------------------------------------------

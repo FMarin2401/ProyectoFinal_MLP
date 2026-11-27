@@ -9,13 +9,16 @@ cupy-cuda12x[ctk]==14.2.0
 
 # Carga de MNIST, CSV y gráficas, evidencia de hilos
 scikit-learn
-pandas
+# pandas < 3: con pandas 3.x, fetch_openml("mnist_784") truena al leer el ARFF
+# (TypeError en strip_single_quotes, probado con scikit-learn 1.9.1).
+pandas<3
 matplotlib
 threadpoolctl
 
-# PyTorch con CUDA NO se instala desde PyPI a secas: usar el comando de https://pytorch.org/get-started/locally/
-# (Windows · Pip · Python · CUDA 12.x) y luego fijar aquí la versión que quede instalada, p. ej. torch==X.Y.Z
-# torch
+# PyTorch con CUDA NO está en PyPI: lo instala setup_entorno.ps1 desde el índice de pytorch.org.
+# Versión probada: torch==2.14.1+cu126. NO lo descomentes aquí: pip bajaría el torch de solo CPU
+# de PyPI y luego daría por instalado el de CUDA.
+# torch==2.14.1+cu126
 
 # Solo para el bonus (kernel @cuda.jit):
 # numba==0.68.1
