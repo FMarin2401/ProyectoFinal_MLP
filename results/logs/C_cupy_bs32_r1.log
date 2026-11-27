@@ -1,0 +1,34 @@
+C:\Users\frank\Documents\Obsidian Vault\SemestresIbero\7mo Semester\Plataformas y Algoritmos en Paralelo\Codigo\ProyectoFinal_MLP\.venv\Lib\site-packages\cupy\_environment.py:286: UserWarning: CUDA path could not be detected. Set CUDA_PATH environment variable if CuPy fails to load.
+  warnings.warn(
+{
+  "backend": "cupy",
+  "batch_size": 32,
+  "epochs": 20,
+  "transfer_s": 0.13353519997326657,
+  "compute_s": 65.60881930001779,
+  "total_s": 65.74235449999105,
+  "eval_s": 0.13662340003065765,
+  "test_acc": 0.9834,
+  "loss_por_época": [
+    0.23267511393229168,
+    0.09378133951822917,
+    0.06123673095703125,
+    0.04288326416015625,
+    0.030921980794270835,
+    0.021578955078125,
+    0.014501937866210938,
+    0.009360293579101562,
+    0.007160652669270833,
+    0.0038517677307128907,
+    0.0029033309936523435,
+    0.0017024940490722657,
+    0.0012816736857096354,
+    0.000996526590983073,
+    0.0008430141448974609,
+    0.0007397046407063802,
+    0.0006619328816731771,
+    0.0005940986633300781,
+    0.0005441171010335287,
+    0.0004996681531270345
+  ]
+}
