@@ -179,14 +179,33 @@ def backward_numpy(p, cache, y):
             dZ2 = dA2 * (Z2 > 0) ; ... (no calcules dX de la primera capa).
     Prohibido: torch, tensorflow, keras, jax, autograd.
     """
-    # TODO (estudiante): implementar backward en NumPy
-    raise NotImplementedError("Completa backward_numpy")
+    X, Z1, A1, Z2, A2, P = cache
+    W1, b1, W2, b2, W3, b3 = p
+    B = X.shape[0]
+
+    # Softmax + entropía cruzada: (P - Y) / B. El /B va solo aquí; las demás capas lo heredan.
+    dZ3 = P.copy()
+    dZ3[np.arange(B), y] -= 1
+    dZ3 /= B
+    dW3 = A2.T @ dZ3
+    db3 = dZ3.sum(axis=0)
+
+    # ReLU deja pasar el gradiente solo donde Z > 0.
+    dZ2 = (dZ3 @ W3.T) * (Z2 > 0)
+    dW2 = A1.T @ dZ2
+    db2 = dZ2.sum(axis=0)
+
+    dZ1 = (dZ2 @ W2.T) * (Z1 > 0)
+    dW1 = X.T @ dZ1
+    db1 = dZ1.sum(axis=0)
+
+    return [dW1, db1, dW2, db2, dW3, db3]
 
 
 def sgd_update_numpy(p, grads, lr):
     """Actualiza la lista p IN-PLACE: p[i] -= lr * grads[i]."""
-    # TODO (estudiante): implementar el paso SGD en NumPy
-    raise NotImplementedError("Completa sgd_update_numpy")
+    for w, g in zip(p, grads):
+        w -= lr * g
 
 
 # --------------------------------------------------------------------------
